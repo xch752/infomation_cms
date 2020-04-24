@@ -1,31 +1,38 @@
 <!-- 登陆 -->
 <template>
-  <div class="full">
-    <el-row>
-      <el-col :xs="4" :sm="8" :md="9" :lg="10" :xl="10">
-        <div class="blank"></div>
-      </el-col>
-      <!-- 登陆界面 -->
-      <el-col :xs="16" :sm="10" :md="6" :lg="4" :xl="4">
-        <div class="card">
-          <!-- logo -->
-          <img class="icon" src="../assets/img/logo.png">
-          <!-- 账号输入框 -->
-          <el-input class="username" placeholder="请输入账号" prefix-icon="el-icon-user" v-model="username" clearable>
-          </el-input>
-          <!-- 密码输入框 -->
-          <el-input class="password" placeholder="请输入密码" prefix-icon="el-icon-lock" v-model="password" show-password>
-          </el-input>
-          <!-- 登陆按钮 -->
-          <el-button @click="login()" :loading="loginLoading" class="login" type="primary">
-            Login
-          </el-button>
-        </div>
-      </el-col>
-      <el-col :xs="4" :sm="8" :md="9" :lg="10" :xl="10">
-        <div class="blank"></div>
-      </el-col>
-    </el-row>
+  <div>
+    <img src="../assets/img/bg.png" alt="" class="wave">
+    <div class="contain">
+      <div class="img">
+        <img src="../assets/img/img-3.svg" alt="">
+      </div>
+      <div class="login-box" v-loading="loginLoading">
+        <form @submit.prevent="onSubmit">
+          <img src="../assets/img/avatar.svg" alt="" class="avatar">
+          <h2></h2>
+          <div class="input-group">
+            <div class="icon">
+              <i class="fa fa-user"></i>
+            </div>
+            <div>
+              <h5>Username</h5>
+              <input type="text" class="input" v-model="username">
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="icon">
+              <i class="fa fa-lock"></i>
+            </div>
+            <div>
+              <h5>Password</h5>
+              <input type="password" class="input" v-model="password">
+            </div>
+          </div>
+          <button class="btn" @click="login()">login</button>
+        </form>
+      </div>
+    </div>
+    <a class="copyright">&copy; xch752</a>
   </div>
 </template>
 
@@ -45,9 +52,29 @@
 
     },
     mounted() {
-      this.onKeyEnter()
+      this.init()
     },
     methods: {
+      init() {
+        const inputs = document.querySelectorAll(".input");
+
+        function focusFunction() {
+          let parentNode = this.parentNode.parentNode;
+          parentNode.classList.add('focus');
+        }
+
+        function blurFunction() {
+          let parentNode = this.parentNode.parentNode;
+          if (this.value == '') {
+            parentNode.classList.remove('focus');
+          }
+        }
+
+        inputs.forEach(input => {
+          input.addEventListener('focus', focusFunction);
+          input.addEventListener('blur', blurFunction);
+        })
+      },
       // 登录
       login() {
         // 未输入账号密码
@@ -91,13 +118,8 @@
           })
         }
       },
-      // 监听回车事件
-      onKeyEnter() {
-        document.onkeydown = (e) => {
-          if (e.keyCode === 13 && e.target.baseURI.match(/login/)) {
-            this.login()
-          }
-        }
+      onSubmit() {
+        return false;
       }
     }
   }
@@ -105,62 +127,239 @@
 </script>
 
 <style scoped>
-  .full {
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 100%;
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .wave {
     position: fixed;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+
+  .contain {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 18rem;
+    padding: 0 2rem;
+  }
+
+  .img {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .img img {
+    width: 500px;
+  }
+
+  .login-box {
+    display: flex;
+    align-items: center;
     text-align: center;
-    background: url('../assets/img/login_background.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
   }
 
-  .el-row {
+  form {
+    width: 360px;
+  }
+
+  .avatar {
+    width: 100px;
+  }
+
+  form h2 {
+    font-size: 2.9rem;
+    text-transform: uppercase;
+    margin: 15px 0;
+    color: #999;
+  }
+
+  input {
+    font-size: 1.2rem;
+  }
+
+  .input-group {
+    position: relative;
+    display: grid;
+    grid-template-columns: 7% 93%;
+    margin: 25px 0;
+    padding: 5px 0;
+    border-bottom: 2px solid #d9d9d9;
+  }
+
+  .input-group:nth-child(1) {
+    margin-bottom: 4px;
+  }
+
+  .input-group:before,
+  .input-group:after {
+    content: '';
     position: absolute;
-    top: 50%;
-    width: 100%;
-    transform: translate(-0%, -50%);
+    bottom: -2px;
+    width: 0;
+    height: 2px;
+    background-color: #2A6DF1;
+    transition: .5s;
   }
 
-  .el-col {
-    border-radius: 4px;
+  .input-group:after {
+    right: 50%;
   }
 
-  .blank {
-    border-radius: 4px;
-    min-height: 36px;
-  }
-
-  .card {
-    background: #ffffff;
-    border-radius: 10px;
-    padding: 25px;
-    -moz-box-shadow: 0px 2px 4px rgb(240, 240, 240);
-    -webkit-box-shadow: 0px 2px 4px rgb(240, 240, 240);
-    box-shadow: 0px 2px 4px rgb(240, 240, 240);
+  .input-group:before {
+    left: 50%;
   }
 
   .icon {
-    width: 50px;
-    height: 50px;
-    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .username {
-    margin-top: 25px;
+  .icon i {
+    color: #d9d9d9;
+    transition: .5s;
   }
 
-  .password {
-    margin-top: 25px;
+  .input-group>div {
+    position: relative;
+    height: 45px;
   }
 
-  .login {
+  .input-group>div>h5 {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #d9d9d9;
+    font-size: 18px;
+    transition: .3s;
+  }
+
+  .input-group.focus .icon i {
+    color: #2A6DF1;
+  }
+
+  .input-group.focus div h5 {
+    top: -5px;
+    font-size: 15px;
+  }
+
+  .input-group.focus:after,
+  .input-group.focus:before {
+    width: 50%;
+  }
+
+  .input {
+    position: absolute;
     width: 100%;
-    margin-top: 25px;
-    border-radius: 999px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: none;
+    outline: none;
+    background: none;
+    padding: 0.5rem 0.7rem;
+    font-size: 1.5rem;
+    color: #555;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  a {
+    display: block;
+    text-align: right;
+    text-decoration: none;
+    color: #999;
+    font-size: 0.9rem;
+    transition: .3s;
+  }
+
+  a:hover {
+    color: #2A6DF1;
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    height: 50px;
+    border-radius: 25px;
+    margin: 1rem 0;
+    font-size: 1.2rem;
+    outline: none;
+    border: none;
+    background-image: linear-gradient(to right, #4d3dd6, #1b68db, #3d40cf);
+    cursor: pointer;
+    color: #fff;
+    text-transform: uppercase;
+    font-family: 'Roboto', sans-serif;
+    background-size: 200%;
+    transition: .5s;
+  }
+
+  .btn:hover {
+    background-position: right;
+  }
+
+  .copyright {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    bottom: 2px;
+    color: #2A6DF1;
+    text-align: center;
+    font-size: 18px;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  /*媒体查询*/
+  @media screen and (max-width: 1080px) {
+    .contain {
+      grid-gap: 9rem;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    form {
+      width: 290px;
+    }
+
+    form h2 {
+      font-size: 2.4rem;
+      margin: 8px 0;
+    }
+
+    .img img {
+      width: 360px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .wave {
+      display: none;
+    }
+
+    .img {
+      display: none;
+    }
+
+    .contain {
+      grid-template-columns: 1fr;
+    }
+
+    .login-box {
+      justify-content: center;
+    }
   }
 
 </style>
