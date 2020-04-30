@@ -15,7 +15,7 @@
     "echarts": "^4.7.0",
     "element-ui": "^2.13.0",
     "hydrogen-js-sdk": "^2.2.3",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "popper.js": "^1.16.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
